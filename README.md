@@ -8,12 +8,15 @@ This is a simple order management Python project following **Clean Architecture*
 
 ```bash
 root/
-└── src/
-    └── order_app/
-        └── domain/
-            └── entities/ --> entities and their related value objects
-    └── main.py --> order app
-    tests/ --> test with similar folder structure to src folder
+├── src/
+│    ├── order_app/
+│    │   ├── domain/
+│    │   │   ├─── entities/ --> entities and their related value objects
+│    │   │   └─── value_objects --> common value objects
+│    │   └── application/
+│    │       └─── use_cases/
+│    └── main.py --> order app
+└── tests/ --> test with similar folder structure to src folder
 ```
 
 ## Setup / Installation (Local)

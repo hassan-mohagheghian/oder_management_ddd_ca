@@ -2,8 +2,11 @@ import datetime
 from dataclasses import dataclass, field
 from decimal import Decimal
 from enum import auto
+from functools import reduce
 from typing import Optional
 from uuid import UUID
+
+from order_app.domain.value_objects.money import Money
 
 from .entity import Entity
 from .product import Product
@@ -22,9 +25,9 @@ class OrderStatus:
 class OrderItem:
     product_id: str
     quantity: int
-    price_per_unit: Decimal
+    price_per_unit: Money
 
-    def total_price(self) -> Decimal:
+    def total_price(self) -> Money:
         return self.price_per_unit * self.quantity
 
     def __str__(self):
@@ -43,8 +46,12 @@ class Order(Entity):
     updated_at: Optional[datetime.datetime] = None
 
     @property
-    def total_price(self) -> Decimal:
-        return sum(item.total_price() for item in self._items)
+    def total_price(self) -> Money:
+        return reduce(
+            lambda x, y: x + y,
+            [item.total_price() for item in self._items],
+            Money(Decimal("0")),
+        )
 
     def add_item(self, product: Product, quantity: int) -> None:
         product.decrease_stock(quantity)

@@ -1,7 +1,8 @@
 import datetime
 from dataclasses import dataclass, field
-from decimal import Decimal
 from typing import Optional
+
+from order_app.domain.value_objects.money import Money
 
 from .entity import Entity
 
@@ -10,7 +11,7 @@ from .entity import Entity
 class Product(Entity):
     name: str
     description: str
-    price: Decimal
+    price: Money
     stock_quantity: int
     created_at: datetime.datetime = field(default_factory=datetime.datetime.now)
     updated_at: Optional[datetime.datetime] = None
