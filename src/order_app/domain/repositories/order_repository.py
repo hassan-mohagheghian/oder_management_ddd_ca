@@ -10,6 +10,10 @@ class OrderRepository(ABC):
         """Save an order to the repository."""
         pass
 
+    def delete(self, order_id: UUID) -> None:
+        """Delete an order from the repository."""
+        pass
+
     @abstractmethod
     def get_by_id(self, order_id: UUID) -> Order:
         """Retrieve an order by its ID."""

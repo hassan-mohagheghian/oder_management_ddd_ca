@@ -2,8 +2,7 @@ from dataclasses import dataclass
 from uuid import UUID
 
 from order_app.domain.entities.order import Order
-from order_app.domain.repositories import product_repository
-from order_app.domain.repositories.order_repository import OrderRepository
+from order_app.domain.repositories import OrderRepository, ProductRepository
 
 
 @dataclass
@@ -21,7 +20,7 @@ class CreateOrderRequest:
 @dataclass
 class CreateOrderUseCase:
     order_repository: OrderRepository
-    product_repository: product_repository.ProductRepository
+    product_repository: ProductRepository
 
     def execute(self, request: CreateOrderRequest) -> Order:
         order = Order(user_id=request.user_id)

@@ -1,11 +1,12 @@
-from uuid import uuid4
-import pytest
 from unittest.mock import MagicMock
+from uuid import uuid4
+
+import pytest
 
 from order_app.application.use_cases.create_order import (
+    CreateOrderRequest,
     CreateOrderUseCase,
     ItemRequest,
-    CreateOrderRequest,
 )
 from order_app.domain.entities.order import OrderItem
 
@@ -76,12 +77,14 @@ def test_create_order_product_not_found(order_repository, product_repository):
     )
 
     user_id = uuid4()
+    product_id = uuid4()
     request = CreateOrderRequest(
         user_id=user_id,
-        items=[ItemRequest(product_id=uuid4(), quantity=1)],
+        items=[ItemRequest(product_id=product_id, quantity=1)],
     )
 
     product_repository.get_by_id.return_value = None
 
     with pytest.raises(ValueError):
         use_case.execute(request)
+    product_repository.get_by_id.assert_called_once_with(product_id)
