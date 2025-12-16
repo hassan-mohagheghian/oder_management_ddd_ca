@@ -1,4 +1,6 @@
 django>=6.0
+djangorestframework>=3.16.1
+drf-spectacular[sidecar]>=0.29.0
 
 # test 
 freezegun>=1.5.5
