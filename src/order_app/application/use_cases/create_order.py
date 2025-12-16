@@ -1,20 +1,10 @@
 from dataclasses import dataclass
-from uuid import UUID
 
+from order_app.application.common.result import Error, Result
+from order_app.application.dtos.order_dtos import CreateOrderRequest, OrderResponse
+from order_app.application.exception import ProductNotFoundError
+from order_app.application.repositories import OrderRepository, ProductRepository
 from order_app.domain.entities.order import Order
-from order_app.domain.repositories import OrderRepository, ProductRepository
-
-
-@dataclass
-class ItemRequest:
-    product_id: UUID
-    quantity: int
-
-
-@dataclass
-class CreateOrderRequest:
-    user_id: UUID
-    items: list[ItemRequest]
 
 
 @dataclass
@@ -22,16 +12,19 @@ class CreateOrderUseCase:
     order_repository: OrderRepository
     product_repository: ProductRepository
 
-    def execute(self, request: CreateOrderRequest) -> Order:
+    def execute(self, request: CreateOrderRequest) -> Result[OrderResponse]:
         order = Order(user_id=request.user_id)
-
+        products = []
         for item in request.items:
             product_id = item.product_id
-            product = self.product_repository.get_by_id(product_id)
-            if not product:
-                raise ValueError(f"Product with ID {product_id} not found")
-
+            try:
+                product = self.product_repository.get_by_id(product_id)
+            except ProductNotFoundError:
+                return Result.failure(Error.not_found("Product", str(product_id)))
             order.add_item(product, item.quantity)
-            self.product_repository.update(product)
+            products.append(product)
+
+        for product in products:
+            self.product_repository.save(product)
         self.order_repository.save(order)
-        return order
+        return Result.success(OrderResponse.from_entity(order))

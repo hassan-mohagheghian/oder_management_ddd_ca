@@ -20,8 +20,3 @@ class ProductRepository(ABC):
             ProductNotFoundError: If no product exists with the given ID
         """
         pass
-
-    @abstractmethod
-    def get_by_user(self, user_id: UUID) -> list[Product]:
-        """Retrieve all products for a specific user."""
-        pass

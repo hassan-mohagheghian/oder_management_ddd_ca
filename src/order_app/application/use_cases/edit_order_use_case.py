@@ -1,16 +1,10 @@
 from dataclasses import dataclass
 
+from order_app.application.common.result import Error, Result
+from order_app.application.dtos.order_dtos import EditOrderRequest, OrderResponse
+from order_app.application.exception import OrderNotFoundError, ProductNotFoundError
+from order_app.application.repositories import OrderRepository, ProductRepository
 from order_app.domain.entities.user import UserRole
-from order_app.domain.repositories import OrderRepository, ProductRepository
-
-
-@dataclass
-class EditOrderRequest:
-    order_id: str
-    user_id: str
-    role: UserRole
-    product_id: str
-    quantity: int
 
 
 @dataclass
@@ -18,17 +12,20 @@ class EditOrderUseCase:
     order_repository: OrderRepository
     product_repository: ProductRepository
 
-    def execute(self, request: EditOrderRequest) -> None:
-        order = self.order_repository.get_by_id(request.order_id)
-        if not order:
-            raise ValueError(f"Order with ID {request.order_id} not found")
+    def execute(self, request: EditOrderRequest) -> Result[OrderResponse]:
+        try:
+            order = self.order_repository.get_by_id(request.order_id)
+        except OrderNotFoundError:
+            return Result.failure(Error.not_found("Order", str(request.order_id)))
 
-        product = self.product_repository.get_by_id(request.product_id)
-        if not product:
-            raise ValueError(f"Product with ID {request.product_id} not found")
+        try:
+            self.product_repository.get_by_id(request.product_id)
+        except ProductNotFoundError:
+            return Result.failure(Error.not_found("Product", str(request.product_id)))
 
         if request.role != UserRole.MANAGER and order.user_id != request.user_id:
-            raise ValueError("You don't have permission to edit this order")
+            return Result.failure(Error.forbidden("Order", str(request.order_id)))
 
         order.edit_item(request.product_id, request.quantity)
         self.order_repository.save(order)
+        return Result.success(OrderResponse.from_entity(order))

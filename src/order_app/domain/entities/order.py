@@ -17,7 +17,9 @@ class Order(Entity):
     user_id: UUID
     _items: list[OrderItem] = field(default_factory=list)
     status: OrderStatus = OrderStatus.CREATED
-    created_at: datetime.datetime = field(default_factory=datetime.datetime.now)
+    created_at: datetime.datetime = field(
+        default_factory=lambda: datetime.datetime.now()
+    )
     updated_at: Optional[datetime.datetime] = None
 
     @property

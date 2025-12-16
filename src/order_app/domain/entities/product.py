@@ -13,7 +13,9 @@ class Product(Entity):
     description: str
     price: Money
     stock_quantity: int
-    created_at: datetime.datetime = field(default_factory=datetime.datetime.now)
+    created_at: datetime.datetime = field(
+        default_factory=lambda: datetime.datetime.now()
+    )
     updated_at: Optional[datetime.datetime] = None
 
     def __str__(self) -> str:

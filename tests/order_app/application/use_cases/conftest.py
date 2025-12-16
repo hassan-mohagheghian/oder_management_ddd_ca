@@ -19,7 +19,7 @@ def order_repository():
 def product_repository():
     class MockProductRepository:
         def __init__(self):
+            self.save = MagicMock()
             self.get_by_id = MagicMock()
-            self.update = MagicMock()
 
     return MockProductRepository()

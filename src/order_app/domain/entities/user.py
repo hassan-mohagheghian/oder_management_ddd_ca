@@ -12,7 +12,9 @@ class User(Entity):
     name: str
     email: str
     role: UserRole = field(default_factory=lambda: UserRole.CUSTOMER)
-    created_at: datetime.datetime = field(default_factory=datetime.datetime.now)
+    created_at: datetime.datetime = field(
+        default_factory=lambda: datetime.datetime.now()
+    )
     updated_at: Optional[datetime.datetime] = None
 
     def update_role(self, role: UserRole) -> None:

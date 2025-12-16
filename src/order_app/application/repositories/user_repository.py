@@ -7,21 +7,17 @@ from order_app.domain.entities.user import User
 
 class UserRepository(ABC):
     @abstractmethod
-    def get_user_by_id(self, user_id: UUID) -> Optional[User]:
-        """Retrieve a user by their unique ID."""
+    def save(self, user: User) -> User:
+        """Save a user to the repository."""
         pass
 
     @abstractmethod
-    def create_user(self, user: User) -> User:
-        """Create a new user in the repository."""
-        pass
+    def get_by_id(self, user_id: UUID) -> Optional[User]:
+        """
+        Retrieve a user by their unique ID.
 
-    @abstractmethod
-    def update_user(self, user: User) -> User:
-        """Update an existing user's information."""
-        pass
+        Raises:
+            UserNotFoundError: If no user exists with the given ID
+        """
 
-    @abstractmethod
-    def delete_user(self, user_id: UUID) -> None:
-        """Delete a user from the repository by their ID."""
         pass

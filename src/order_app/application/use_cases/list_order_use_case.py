@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from uuid import UUID
 
+from order_app.application.repositories import OrderRepository
 from order_app.domain.entities.order import Order
 from order_app.domain.entities.user import UserRole
-from order_app.domain.repositories import OrderRepository
 
 
 @dataclass
