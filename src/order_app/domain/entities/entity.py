@@ -19,7 +19,7 @@ class Entity:
 
     def __eq__(self, other: Self) -> bool:
         if not isinstance(other, type(self)):
-            return NotImplemented
+            raise NotImplementedError
         return self.id == other.id
 
     def __hash__(self) -> int:

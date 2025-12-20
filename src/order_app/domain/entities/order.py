@@ -49,6 +49,9 @@ class Order(Entity):
             )
             self._items.append(item)
 
+    def get_items(self):
+        return self._items
+
     def remove_item(self, order_item: OrderItem) -> None:
         if order_item in self._items:
             self._items.remove(order_item)
@@ -74,6 +77,3 @@ class Order(Entity):
     @property
     def item_count(self) -> int:
         return len(self._items)
-
-    def __str__(self):
-        return f"Order(id={self.id}, user_id={self.user_id}, items:[{', '.join(str(item) for item in self._items)}])"

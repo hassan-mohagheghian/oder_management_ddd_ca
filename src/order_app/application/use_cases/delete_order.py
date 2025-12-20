@@ -2,9 +2,9 @@ from dataclasses import dataclass
 
 from order_app.application.common.result import Error, Result
 from order_app.application.dtos.order_dtos import DeleteOrderRequest
-from order_app.application.exception import OrderNotFoundError
 from order_app.application.repositories import OrderRepository
 from order_app.domain.entities.user import UserRole
+from order_app.domain.exception import OrderNotFoundError
 
 
 @dataclass

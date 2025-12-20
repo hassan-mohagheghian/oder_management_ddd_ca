@@ -2,9 +2,9 @@ from dataclasses import dataclass
 
 from order_app.application.common.result import Error, Result
 from order_app.application.dtos.order_dtos import CreateOrderRequest, OrderResponse
-from order_app.application.exception import InsufficientStockError, ProductNotFoundError
 from order_app.application.repositories import OrderRepository, ProductRepository
 from order_app.domain.entities.order import Order
+from order_app.domain.exception import InsufficientStockError, ProductNotFoundError
 
 
 @dataclass

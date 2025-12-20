@@ -1,7 +1,7 @@
 import pytest
 
-from order_app.application.exception import InsufficientStockError
 from order_app.domain.entities.product import Product
+from order_app.domain.exception import InsufficientStockError
 
 
 @pytest.fixture
@@ -30,3 +30,10 @@ def test_decrease_stock_invalid_quantity(product):
 def test_decrease_stock_insufficient(product):
     with pytest.raises(InsufficientStockError, match="Insufficient stock to decrease"):
         product.decrease_stock(product.stock_quantity + 1)
+
+
+def test_increase_stock_zero_order_negative_quantity(product):
+    with pytest.raises(ValueError, match="Quantity must be positive"):
+        product.increase_stock(0)
+    with pytest.raises(ValueError, match="Quantity must be positive"):
+        product.increase_stock(-5)

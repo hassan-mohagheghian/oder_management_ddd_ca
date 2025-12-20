@@ -2,11 +2,11 @@ from unittest.mock import MagicMock
 from uuid import uuid4
 
 from order_app.application.common.result import Error
-from order_app.application.exception import OrderNotFoundError
 from order_app.application.use_cases.delete_order import (
     DeleteOrderRequest,
     DeleteOrderUseCase,
 )
+from order_app.domain.exception import OrderNotFoundError
 from order_app.domain.value_objects import UserRole
 
 

@@ -1,5 +1,7 @@
 from enum import Enum, auto
 
+from order_app.domain.exception import InvalidUserRoleError
+
 
 class UserRole(Enum):
     MANAGER = auto()
@@ -7,4 +9,7 @@ class UserRole(Enum):
 
     @classmethod
     def from_str(cls, role: str):
-        return cls[role.upper()]
+        try:
+            return cls[role.upper()]
+        except (KeyError, AttributeError):
+            raise InvalidUserRoleError(role)

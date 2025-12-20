@@ -23,3 +23,9 @@ class InsufficientStockError(DomainError):
     def __init__(self, product_id: UUID):
         self.product_id = product_id
         super().__init__(f"Product with ID {product_id} is out of stock")
+
+
+class InvalidUserRoleError(DomainError):
+    def __init__(self, role: str):
+        self.role = role
+        super().__init__(f"Invalid user role: {role}")

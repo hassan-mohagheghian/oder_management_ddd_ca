@@ -4,7 +4,6 @@ from uuid import uuid4
 
 from order_app.application.common.result import Error
 from order_app.application.dtos.order_dtos import OrderResponse
-from order_app.application.exception import OrderNotFoundError, ProductNotFoundError
 from order_app.application.use_cases.edit_order_use_case import (
     EditOrderRequest,
     EditOrderUseCase,
@@ -12,6 +11,7 @@ from order_app.application.use_cases.edit_order_use_case import (
 from order_app.domain.entities.order import Order
 from order_app.domain.entities.product import Product
 from order_app.domain.entities.user import UserRole
+from order_app.domain.exception import OrderNotFoundError, ProductNotFoundError
 from order_app.domain.value_objects.money import Money
 
 

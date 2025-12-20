@@ -5,12 +5,12 @@ from uuid import uuid4
 from freezegun import freeze_time
 
 from order_app.application.dtos.order_dtos import ItemRequest
-from order_app.application.exception import InsufficientStockError, ProductNotFoundError
 from order_app.application.use_cases.create_order import (
     CreateOrderRequest,
     CreateOrderUseCase,
 )
 from order_app.domain.entities.order import Order
+from order_app.domain.exception import InsufficientStockError, ProductNotFoundError
 from order_app.domain.value_objects.money import Money
 
 
