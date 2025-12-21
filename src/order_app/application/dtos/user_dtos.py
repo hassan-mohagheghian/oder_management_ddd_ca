@@ -9,7 +9,7 @@ from order_app.domain.entities.user import User
 class RegisterUserRequestDto:
     name: str
     email: str
-    password_hash: str
+    password: str
 
 
 @dataclass

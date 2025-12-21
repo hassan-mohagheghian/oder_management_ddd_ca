@@ -1,4 +1,5 @@
 fastapi[standard]>=0.127.0
+passlib[argon2]
 
 # test 
 freezegun>=1.5.5

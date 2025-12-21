@@ -1,18 +1,32 @@
+import pytest
 from freezegun import freeze_time
 
 from order_app.application.common.result import Error, ErrorCode
 from order_app.application.dtos.user_dtos import RegisterUserRequestDto, UserResponse
+from order_app.application.ports.password_hasher import PasswordHasher
 from order_app.application.use_cases.users import RegisterUserUseCase
 from order_app.domain.entities.user import User
 from order_app.domain.exception import UserNotFoundError
 from order_app.domain.value_objects.user_role import UserRole
 
 
-def test_register_user_found_by_email(user_repository):
-    use_case = RegisterUserUseCase(user_repository=user_repository)
-    request = RegisterUserRequestDto(
-        name="name", email="email", password_hash="password_hash"
+@pytest.fixture
+def password_hasher():
+    class MockPasswordHasher(PasswordHasher):
+        def hash(self, plain_password: str) -> str:
+            return "password_hash"
+
+        def verify(self, plain_password: str, hashed_password: str) -> bool:
+            return plain_password == hashed_password
+
+    return MockPasswordHasher()
+
+
+def test_register_user_found_by_email(user_repository, password_hasher):
+    use_case = RegisterUserUseCase(
+        user_repository=user_repository, password_hasher=None
     )
+    request = RegisterUserRequestDto(name="name", email="email", password="password")
 
     result = use_case.execute(request)
 
@@ -27,24 +41,26 @@ def test_register_user_found_by_email(user_repository):
 
 
 @freeze_time("2022-01-01")
-def test_register_user(user_repository):
+def test_register_user(user_repository, password_hasher):
     user_repository.get_by_email.side_effect = UserNotFoundError
-    use_case = RegisterUserUseCase(user_repository=user_repository)
-    request = RegisterUserRequestDto(
-        name="name", email="email", password_hash="password_hash"
+    use_case = RegisterUserUseCase(
+        user_repository=user_repository, password_hasher=password_hasher
     )
+    request = RegisterUserRequestDto(name="name", email="email", password="password")
 
     result = use_case.execute(request)
 
     desired_user = User.new(
         name=request.name,
         email=request.email,
-        password_hash=request.password_hash,
+        password_hash=password_hasher.hash(request.password),
         role=UserRole.CUSTOMER,
     )
+
     desired_user.id = result.value.id
     user_repository.get_by_email.assert_called_once_with(request.email)
     user_repository.save.assert_called_once_with(desired_user)
 
     assert result.is_success
+    assert result.value == UserResponse.from_entity(desired_user)
     assert result.value == UserResponse.from_entity(desired_user)
