@@ -5,14 +5,12 @@ import pytest
 
 from order_app.domain.entities.order import Order, OrderItem, OrderStatus
 from order_app.domain.entities.product import Product
-from order_app.domain.entities.user import User
 from order_app.domain.value_objects.money import Money
 
 
 @pytest.fixture
-def order():
-    user = User.new(name="Test User", email="test@example.com")
-    return Order.new(user_id=user.id)
+def order(user_customer):
+    return Order.new(user_id=user_customer.id)
 
 
 def test_order_initial_status(order):
