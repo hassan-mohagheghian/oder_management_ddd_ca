@@ -6,8 +6,22 @@ from order_app.domain.entities.user import User
 
 class UserRepository(ABC):
     @abstractmethod
-    def save(self, user: User) -> User:
-        """Save a user to the repository."""
+    def create(self, user: User) -> User:
+        """
+        Save a user to the repository.
+
+        Raises:
+            UserAlreadyExistsError: If a user with the same email already exists
+        """
+        pass
+
+    def update(self, user: User) -> User:
+        """
+        Update an existing user in the repository.
+
+        Raises:
+            UserNotFoundError: If no user exists with the given ID
+        """
         pass
 
     @abstractmethod
@@ -22,7 +36,7 @@ class UserRepository(ABC):
         pass
 
     @abstractmethod
-    def get_by_email(self, user_id: UUID) -> User | None:
+    def get_by_email(self, email: str) -> User | None:
         """
         Retrieve a user by their email.
 

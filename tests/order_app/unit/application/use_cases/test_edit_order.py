@@ -36,7 +36,7 @@ def test_edit_order_not_found(order_repository, product_repository):
 
     order_repository.get_by_id.assert_called_once_with(order_id)
     product_repository.get_by_id.assert_not_called()
-    order_repository.save.assert_not_called()
+    order_repository.update.assert_not_called()
     assert not result.is_success
 
 
@@ -68,7 +68,7 @@ def test_edit_product_not_found(order_repository, product_repository):
 
     order_repository.get_by_id.assert_called_once_with(order_id)
     product_repository.get_by_id.assert_called_once_with(product_id)
-    order_repository.save.assert_not_called()
+    order_repository.update.assert_not_called()
     assert not result.is_success
     assert result.error == Error.not_found(
         entity="Product", attr_name="id", attr_value=str(product_id)
@@ -108,7 +108,7 @@ def test_edit_product_without_permission_by_customer(
 
     order_repository.get_by_id.assert_called_once_with(order_id)
     product_repository.get_by_id.assert_called_once_with(product_id)
-    order_repository.save.assert_not_called()
+    order_repository.update.assert_not_called()
     assert not result.is_success
     assert result.error == Error.forbidden(
         entity="Order", action="edit", entity_id=str(order_id)
@@ -156,6 +156,6 @@ def test_edit_product_with_permission_by_customer(order_repository, product_repo
     order_repository.get_by_id.assert_called_once_with(order.id)
     product_repository.get_by_id.assert_called_once_with(product1.id)
     order.edit_item.assert_called_once_with(product1, 36)
-    order_repository.save.assert_called_once_with(order)
+    order_repository.update.assert_called_once_with(order)
     assert result.is_success
     assert isinstance(result.value, OrderResponse)

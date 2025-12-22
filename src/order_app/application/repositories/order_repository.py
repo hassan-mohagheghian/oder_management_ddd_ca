@@ -6,8 +6,12 @@ from order_app.domain.entities.order import Order
 
 class OrderRepository(ABC):
     @abstractmethod
-    def save(self, order: Order) -> None:
+    def create(self, order: Order) -> None:
         """Save an order to the repository."""
+        pass
+
+    def update(self, order: Order) -> None:
+        """Update an order in the repository."""
         pass
 
     def delete(self, order_id: UUID) -> None:

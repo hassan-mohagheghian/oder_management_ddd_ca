@@ -45,7 +45,7 @@ def test_register_user(user_repository, password_hasher):
 
     desired_user.id = result.value.id
     user_repository.get_by_email.assert_called_once_with(request.email)
-    user_repository.save.assert_called_once_with(desired_user)
+    user_repository.create.assert_called_once_with(desired_user)
 
     assert result.is_success
     assert result.value == UserResponse.from_entity(desired_user)

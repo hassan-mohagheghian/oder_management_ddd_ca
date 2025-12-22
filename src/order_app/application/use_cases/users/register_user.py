@@ -24,7 +24,7 @@ class RegisterUserUseCase:
                 password_hash=password_hash,
             )
 
-            self.user_repository.save(user)
+            self.user_repository.create(user)
             return Result.success(UserResponse.from_entity(user))
         else:
             return Result.failure(

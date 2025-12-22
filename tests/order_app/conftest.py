@@ -23,7 +23,7 @@ def password_hasher():
 def user_repository():
     class MockUserRepository:
         def __init__(self):
-            self.save = MagicMock()
+            self.create = MagicMock()
             self.get_by_id = MagicMock()
             self.get_by_email = MagicMock()
 
@@ -34,7 +34,8 @@ def user_repository():
 def order_repository():
     class MockOrderRepository:
         def __init__(self):
-            self.save = MagicMock()
+            self.create = MagicMock()
+            self.update = MagicMock()
             self.delete = MagicMock()
             self.get_by_id = MagicMock()
             self.get_list = MagicMock()
@@ -46,7 +47,8 @@ def order_repository():
 def product_repository():
     class MockProductRepository:
         def __init__(self):
-            self.save = MagicMock()
+            self.create = MagicMock()
+            self.update = MagicMock()
             self.get_by_id = MagicMock()
 
     return MockProductRepository()

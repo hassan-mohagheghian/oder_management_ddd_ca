@@ -39,6 +39,6 @@ class EditOrderUseCase:
             )
 
         order.edit_item(product, request.quantity)
-        self.product_repository.save(product)
-        self.order_repository.save(order)
+        self.product_repository.update(product)
+        self.order_repository.update(order)
         return Result.success(OrderResponse.from_entity(order))

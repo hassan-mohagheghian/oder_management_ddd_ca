@@ -36,6 +36,6 @@ class CreateOrderUseCase:
             products.append(product)
 
         for product in products:
-            self.product_repository.save(product)
-        self.order_repository.save(order)
+            self.product_repository.create(product)
+        self.order_repository.create(order)
         return Result.success(OrderResponse.from_entity(order))

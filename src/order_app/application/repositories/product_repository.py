@@ -6,8 +6,12 @@ from order_app.domain.entities.product import Product
 
 class ProductRepository(ABC):
     @abstractmethod
-    def save(self, product: Product) -> None:
+    def create(self, product: Product) -> None:
         """Save a product to the repository."""
+        pass
+
+    def update(self, product: Product) -> None:
+        """Update a product in the repository."""
         pass
 
     @abstractmethod

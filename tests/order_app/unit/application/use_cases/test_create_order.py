@@ -86,13 +86,13 @@ def test_create_order(order_repository, product_repository):
     )
     result = use_case.execute(request)
 
-    product_repository.save.assert_any_call(product_1)
-    product_repository.save.assert_any_call(product_2)
+    product_repository.create.assert_any_call(product_1)
+    product_repository.create.assert_any_call(product_2)
     desired_order = Order.new(user_id=user_id)
     desired_order.id = result.value.order_id
     desired_order.add_item(product_1, quantity=2)
     desired_order.add_item(product_2, quantity=1)
-    order_repository.save.assert_called_once_with(desired_order)
+    order_repository.create.assert_called_once_with(desired_order)
 
     assert result.value.user_id == request.user_id
     assert result.value.item_count == 2

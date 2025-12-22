@@ -1,0 +1,40 @@
+from uuid import UUID
+
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel, EmailStr
+from starlette import status
+
+from order_app.infrastructure.composition_root import CompositionRoot
+from order_app.infrastructure.web.fastapi.composition_root import composition_root
+from order_app.infrastructure.web.fastapi.dependencies import get_composition_root
+from order_app.interface.controllers.user_controller import RegisterUserInputDto
+
+router = APIRouter()
+
+
+class RegisterUserRequest(BaseModel):
+    email: EmailStr
+    password: str
+    name: str
+
+
+class RegisterUserResponse(BaseModel):
+    user_id: UUID
+
+
+@router.post("/register", response_model=RegisterUserResponse, status_code=201)
+def register_user(
+    request: RegisterUserRequest, root: CompositionRoot = Depends(get_composition_root)
+):
+    operation_result = composition_root.user_controller.handle_register_user(
+        RegisterUserInputDto(
+            name=request.name, email=request.email, password=request.password
+        )
+    )
+    if operation_result.is_success:
+        return RegisterUserResponse(user_id=operation_result.success.id)
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=operation_result.error.message,
+        )
