@@ -1,28 +1,14 @@
-import pytest
 from freezegun import freeze_time
 
 from order_app.application.common.result import Error, ErrorCode
 from order_app.application.dtos.user_dtos import RegisterUserRequestDto, UserResponse
-from order_app.application.ports.password_hasher import PasswordHasher
 from order_app.application.use_cases.users import RegisterUserUseCase
 from order_app.domain.entities.user import User
 from order_app.domain.exception import UserNotFoundError
 from order_app.domain.value_objects.user_role import UserRole
 
 
-@pytest.fixture
-def password_hasher():
-    class MockPasswordHasher(PasswordHasher):
-        def hash(self, plain_password: str) -> str:
-            return "password_hash"
-
-        def verify(self, plain_password: str, hashed_password: str) -> bool:
-            return plain_password == hashed_password
-
-    return MockPasswordHasher()
-
-
-def test_register_user_found_by_email(user_repository, password_hasher):
+def test_register_user_found_by_email(user_repository):
     use_case = RegisterUserUseCase(
         user_repository=user_repository, password_hasher=None
     )
