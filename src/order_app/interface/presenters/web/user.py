@@ -1,4 +1,4 @@
-from order_app.application.dtos.user_dtos import UserResponse
+from order_app.application.dtos.user.register import UserResponse
 from order_app.interface.presenters.base.user import UserPresenter
 from order_app.interface.view_models.error_vm import ErrorViewModel
 from order_app.interface.view_models.user_vm import UserViewModel

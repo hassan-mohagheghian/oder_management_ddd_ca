@@ -1,3 +1,4 @@
-__all__ = ["RegisterUserUseCase"]
+__all__ = ["RegisterUserUseCase", "LoginUserUseCase"]
 
+from .login import LoginUserUseCase
 from .register import RegisterUserUseCase

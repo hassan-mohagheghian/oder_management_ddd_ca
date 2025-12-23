@@ -1,7 +1,10 @@
 from dataclasses import dataclass
 
 from order_app.application.common.result import Error, Result
-from order_app.application.dtos.user_dtos import RegisterUserRequestDto, UserResponse
+from order_app.application.dtos.user.register import (
+    RegisterUserRequestDto,
+    UserResponse,
+)
 from order_app.application.ports.password_hasher import PasswordHasher
 from order_app.application.repositories.user_repository import UserRepository
 from order_app.domain.entities.user import User

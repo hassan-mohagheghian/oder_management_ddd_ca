@@ -1,7 +1,10 @@
 from freezegun import freeze_time
 
 from order_app.application.common.result import Error, ErrorCode
-from order_app.application.dtos.user_dtos import RegisterUserRequestDto, UserResponse
+from order_app.application.dtos.user.register import (
+    RegisterUserRequestDto,
+    UserResponse,
+)
 from order_app.application.use_cases.user import RegisterUserUseCase
 from order_app.domain.entities.user import User
 from order_app.domain.exception import UserNotFoundError
@@ -47,6 +50,9 @@ def test_register_user(user_repository, password_hasher):
     user_repository.get_by_email.assert_called_once_with(request.email)
     user_repository.create.assert_called_once_with(desired_user)
 
+    assert result.is_success
+    assert result.value == UserResponse.from_entity(desired_user)
+    assert result.value == UserResponse.from_entity(desired_user)
     assert result.is_success
     assert result.value == UserResponse.from_entity(desired_user)
     assert result.value == UserResponse.from_entity(desired_user)

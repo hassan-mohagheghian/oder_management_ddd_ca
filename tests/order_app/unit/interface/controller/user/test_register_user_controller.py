@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 import pytest
 
 from order_app.application.common.result import Error, Result
-from order_app.application.dtos.user_dtos import RegisterUserRequestDto
+from order_app.application.dtos.user.register import RegisterUserRequestDto
 from order_app.interface.controllers.user.register_user import (
     RegisterUserController,
     RegisterUserInputDto,

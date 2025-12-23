@@ -76,12 +76,8 @@ class Error:
         )
 
     @classmethod
-    def domain(cls, message: str) -> Self:
-        return cls(
-            code=ErrorCode.DOMAIN,
-            message="Domain rule violated",
-            details={"detail": message},
-        )
+    def domain(cls, message: str | None = None) -> Self:
+        return cls(code=ErrorCode.DOMAIN, message=message)
 
 
 @dataclass(frozen=True)
