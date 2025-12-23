@@ -13,7 +13,11 @@ For run you could follow any oth below path:
 
 ## Feature Status
 
-Until now, most CRUD operation for orders are implemented as below list:
+### User Management
+
+    - register user
+
+### Order Management
 
     - create order
     - list order (return all for manager user and owned for customer)
@@ -27,7 +31,6 @@ User management has not been implemented yet. but as an start follow below steps
     - two user created (manager, customer) and moved to respectively group.
     - you can add another user and assign them in any of manager or customer group.
     - to work with rest API endpoint use user's Tokens.
-    - 
 
 ## Project Structure
 
@@ -36,7 +39,7 @@ User management has not been implemented yet. but as an start follow below steps
     │    └── order_app/
     │        ├── domain/
     │        │   ├─── entities/ --> entities and their related value objects
-    │        │   └─── value_objects --> common value objects
+    │        │   └─── value_objects/ --> common value objects
     │        ├── application/
     │        │   └─── use_cases/
     │        ├── interface/
@@ -44,14 +47,19 @@ User management has not been implemented yet. but as an start follow below steps
     │        │   ├─── presenters/
     │        │   └─── view_models/
     │        └── infrastructure/
-    │            └─── web_app/
-    │                 └─── django_order_app/ --> django app with repositories implementation.
-    │    
-    └── tests/ --> test with similar folder structure to src folder
+    │            ├─── persistence/
+    │            ├─── security/
+    │            ├─── web/
+    │            │    └─── fastapi/
+    │            └─── composition_root
+    └── tests/
+        └── order_app/
+            ├── unit/
+            └── contract/
 
 ## Request/Response Flow
 
-    HTTP Request (Django)
+    HTTP Request (FastAPI)
             ↓
     Interface Layer
     └── Controller
@@ -70,7 +78,7 @@ User management has not been implemented yet. but as an start follow below steps
             ↓
     ViewModel
             ↓
-    HTTP Response (Django)
+    HTTP Response (FastAPI)
 
 ## Setup / Installation (Local)
 
@@ -94,7 +102,7 @@ User management has not been implemented yet. but as an start follow below steps
 
 ### Running the Application
 
-    python src/order_app/infrastructure/web/django_order_app/manage.py runserver
+    fastapi dev ./src/order_app/web_main.py
 
 ### Running Tests
 
