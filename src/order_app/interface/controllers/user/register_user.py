@@ -4,7 +4,7 @@ from order_app.application.dtos.user.register import RegisterUserRequestDto
 from order_app.application.use_cases.user.register import RegisterUserUseCase
 from order_app.interface.common.operation_result import OperationResult
 from order_app.interface.presenters.base.user import RegisterPresenter
-from order_app.interface.view_models.user_vm import UserViewModel
+from order_app.interface.view_models.user_vm import RegisterUserViewModel
 
 
 @dataclass
@@ -19,7 +19,9 @@ class RegisterUserController:
     register_user_use_case: RegisterUserUseCase
     presenter: RegisterPresenter
 
-    def handle(self, input: RegisterUserInputDto) -> OperationResult[UserViewModel]:
+    def handle(
+        self, input: RegisterUserInputDto
+    ) -> OperationResult[RegisterUserViewModel]:
         request_dto = RegisterUserRequestDto(
             name=input.name, email=input.email, password=input.password
         )

@@ -21,12 +21,11 @@ class RegisterUserResponse(BaseModel):
     user_id: UUID
 
 
-# @user_router.post("/register", response_model=RegisterUserResponse, status_code=201)
 def register_user(
     request: RegisterUserRequest,
     composition_root: CompositionRoot = Depends(get_composition_root),
 ):
-    operation_result = composition_root.user_controller.handle(
+    operation_result = composition_root.register_user_controller.handle(
         RegisterUserInputDto(
             name=request.name, email=request.email, password=request.password
         )

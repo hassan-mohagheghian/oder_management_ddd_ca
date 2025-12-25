@@ -50,6 +50,6 @@ class CompositionRoot:
             delete_order_use_case=delete_order_use_case,
             presenter=self.order_presenter,
         )
-        self.user_controller = RegisterUserController(
+        self.register_user_controller = RegisterUserController(
             register_user_use_case=register_user_use_case, presenter=self.user_presenter
         )

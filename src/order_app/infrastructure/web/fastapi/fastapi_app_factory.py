@@ -6,6 +6,7 @@ from order_app.infrastructure.web.fastapi.routes.user import router as user_rout
 
 def create_web_app(testing: bool = False):
     app = FastAPI(title="Order Management App", version="0.1.0")
+
     if testing:
         app.testing = True
     else:

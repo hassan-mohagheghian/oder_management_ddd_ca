@@ -2,7 +2,16 @@ from unittest.mock import MagicMock
 
 import pytest
 
+
 # Application-level fixtures
+@pytest.fixture
+def register_user_use_case(user_repository):
+    class MockRegisterUserUseCase:
+        def __init__(self):
+            self.execute = MagicMock()
+            self.user_repository = user_repository
+
+    return MockRegisterUserUseCase()
 
 
 # Domain-level fixtures

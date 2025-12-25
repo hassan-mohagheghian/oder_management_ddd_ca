@@ -11,6 +11,10 @@ class UserViewModel:
 
 
 @dataclass
+class RegisterUserViewModel(UserViewModel): ...
+
+
+@dataclass
 class LoginUserViewModel:
     user: UserViewModel
     access_token: str
