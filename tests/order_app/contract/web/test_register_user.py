@@ -19,10 +19,12 @@ def composition_root(user_repository, register_user_controller) -> CompositionRo
         product_repository=None,
         user_repository=user_repository,
         order_presenter=None,
-        user_presenter=None,
+        register_presenter=None,
+        login_presenter=None,
         password_hasher=None,
     )
-    composition_root.register_user_controller = register_user_controller
+    composition_root.register_controller = register_user_controller
+
     return composition_root
 
 
@@ -81,13 +83,13 @@ def test_register_user_success(test_client, composition_root_instance):
         email="test@example.com",
         role="customer",
     )
-    composition_root_instance.register_user_controller.handle = Mock(
+    composition_root_instance.register_controller.handle = Mock(
         return_value=OperationResult.succeed(success_vm)
     )
 
     response = test_client.post("/users/register", json=payload)
 
-    composition_root_instance.register_user_controller.handle.assert_called_with(
+    composition_root_instance.register_controller.handle.assert_called_with(
         controller_input
     )
     assert response.status_code == status.HTTP_201_CREATED
@@ -99,13 +101,13 @@ def test_register_user_failure(test_client, composition_root_instance):
     controller_input = RegisterUserInputDto(
         name="Test User", email="test@example.com", password="password"
     )
-    composition_root_instance.register_user_controller.handle = Mock(
+    composition_root_instance.register_controller.handle = Mock(
         return_value=OperationResult.fail(
             "User with this email already exists", "USER_ALREADY_EXISTS"
         )
     )
     response = test_client.post("/users/register", json=payload)
-    composition_root_instance.register_user_controller.handle.assert_called_with(
+    composition_root_instance.register_controller.handle.assert_called_with(
         controller_input
     )
     assert response.status_code == status.HTTP_400_BAD_REQUEST

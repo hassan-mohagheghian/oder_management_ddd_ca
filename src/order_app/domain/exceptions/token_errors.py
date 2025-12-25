@@ -10,10 +10,12 @@ class JwtError(DomainError):
 class TokenExpiredError(JwtError):
     """Raised when a JWT has expired."""
 
-    pass
+    def __init__():
+        super().__init__("Token has expired")
 
 
 class InvalidTokenError(JwtError):
     """Raised when a JWT is invalid."""
 
-    pass
+    def __init__():
+        super().__init__("Invalid token")

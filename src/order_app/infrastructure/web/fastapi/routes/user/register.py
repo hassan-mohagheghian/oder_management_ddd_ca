@@ -6,8 +6,6 @@ from starlette import status
 
 from order_app.infrastructure.composition_root import CompositionRoot
 from order_app.infrastructure.web.fastapi.dependencies import get_composition_root
-
-# from order_app.infrastructure.web.fastapi.routes.user import user_router
 from order_app.interface.controllers.user.register_user import RegisterUserInputDto
 
 
@@ -25,7 +23,7 @@ def register_user(
     request: RegisterUserRequest,
     composition_root: CompositionRoot = Depends(get_composition_root),
 ):
-    operation_result = composition_root.register_user_controller.handle(
+    operation_result = composition_root.register_controller.handle(
         RegisterUserInputDto(
             name=request.name, email=request.email, password=request.password
         )
