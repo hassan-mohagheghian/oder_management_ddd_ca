@@ -1,7 +1,10 @@
 from abc import ABC, abstractmethod
 
 from order_app.application.dtos.user.login import LoginUserResponseDto
-from order_app.application.dtos.user.register import UserResponse
+from order_app.application.dtos.user.register import (
+    RegisterUserResponseDto,
+    UserResponseDto,
+)
 from order_app.interface.view_models.error_vm import ErrorViewModel
 from order_app.interface.view_models.user_vm import (
     LoginUserViewModel,
@@ -11,7 +14,9 @@ from order_app.interface.view_models.user_vm import (
 
 class RegisterPresenter(ABC):
     @abstractmethod
-    def present_success(self, user_response: UserResponse) -> RegisterUserViewModel:
+    def present_success(
+        self, user_response: RegisterUserResponseDto
+    ) -> RegisterUserViewModel:
         raise NotImplementedError  # pragma: no cover
 
     @abstractmethod

@@ -1,9 +1,12 @@
-from freezegun import freeze_time
+from unittest.mock import MagicMock
 
+from freezegun import freeze_time
 from order_app.application.common.result import Error, ErrorCode
 from order_app.application.dtos.user.register import (
     RegisterUserRequestDto,
-    UserResponse,
+    RegisterUserResponseDto,
+    TokensResponseDto,
+    UserResponseDto,
 )
 from order_app.application.use_cases.user import RegisterUserUseCase
 from order_app.domain.entities.user import User
@@ -11,9 +14,9 @@ from order_app.domain.exceptions import UserNotFoundError
 from order_app.domain.value_objects.user_role import UserRole
 
 
-def test_register_user_found_by_email(user_repository):
+def test_register_user_found_by_email(user_repository, jwt_service):
     use_case = RegisterUserUseCase(
-        user_repository=user_repository, password_hasher=None
+        user_repository=user_repository, password_hasher=None, jwt_service=jwt_service
     )
     request = RegisterUserRequestDto(name="name", email="email", password="password")
 
@@ -30,10 +33,13 @@ def test_register_user_found_by_email(user_repository):
 
 
 @freeze_time("2022-01-01")
-def test_register_user(user_repository, password_hasher):
+def test_register_user(user_repository, password_hasher, jwt_service):
     user_repository.get_by_email.side_effect = UserNotFoundError
+    jwt_service.generate_token = MagicMock(return_value="access_token")
     use_case = RegisterUserUseCase(
-        user_repository=user_repository, password_hasher=password_hasher
+        user_repository=user_repository,
+        password_hasher=password_hasher,
+        jwt_service=jwt_service,
     )
     request = RegisterUserRequestDto(name="name", email="email", password="password")
 
@@ -46,13 +52,15 @@ def test_register_user(user_repository, password_hasher):
         role=UserRole.CUSTOMER,
     )
 
-    desired_user.id = result.value.id
+    desired_user.id = result.value.user.id
     user_repository.get_by_email.assert_called_once_with(request.email)
+    jwt_service.generate_token.assert_called_once_with(
+        payload={"sub": str(desired_user.id), "role": desired_user.role.name}
+    )
     user_repository.create.assert_called_once_with(desired_user)
 
     assert result.is_success
-    assert result.value == UserResponse.from_entity(desired_user)
-    assert result.value == UserResponse.from_entity(desired_user)
-    assert result.is_success
-    assert result.value == UserResponse.from_entity(desired_user)
-    assert result.value == UserResponse.from_entity(desired_user)
+    assert result.value == RegisterUserResponseDto(
+        user=UserResponseDto.from_entity(desired_user),
+        tokens=TokensResponseDto(access_token="access_token"),
+    )

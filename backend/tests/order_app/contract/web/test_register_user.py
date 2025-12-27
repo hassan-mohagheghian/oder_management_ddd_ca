@@ -3,13 +3,16 @@ from unittest.mock import Mock
 import pytest
 from fastapi import status
 from fastapi.testclient import TestClient
-
 from order_app.infrastructure.composition_root import CompositionRoot
 from order_app.infrastructure.web.fastapi.dependencies import get_composition_root
 from order_app.infrastructure.web.fastapi.fastapi_app_factory import create_web_app
 from order_app.interface.common.operation_result import OperationResult
 from order_app.interface.controllers.user.register_user import RegisterUserInputDto
-from order_app.interface.view_models.user_vm import RegisterUserViewModel
+from order_app.interface.view_models.user_vm import (
+    RegisterUserViewModel,
+    TokensViewModel,
+    UserViewModel,
+)
 
 
 @pytest.fixture
@@ -78,10 +81,13 @@ def test_register_user_success(test_client, composition_root_instance):
         name="Test User", email="test@example.com", password="password"
     )
     success_vm = RegisterUserViewModel(
-        id="123e4567-e89b-12d3-a456-426614174000",
-        name="Test User",
-        email="test@example.com",
-        role="customer",
+        user=UserViewModel(
+            id="123e4567-e89b-12d3-a456-426614174000",
+            name="Test User",
+            email="test@example.com",
+            role="customer",
+        ),
+        tokens=TokensViewModel(access_token="access_token"),
     )
     composition_root_instance.register_controller.handle = Mock(
         return_value=OperationResult.succeed(success_vm)
@@ -93,7 +99,10 @@ def test_register_user_success(test_client, composition_root_instance):
         controller_input
     )
     assert response.status_code == status.HTTP_201_CREATED
-    assert response.json() == {"user_id": "123e4567-e89b-12d3-a456-426614174000"}
+    assert response.json() == {
+        "user_id": "123e4567-e89b-12d3-a456-426614174000",
+        "access_token": "access_token",
+    }
 
 
 def test_register_user_failure(test_client, composition_root_instance):

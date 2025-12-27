@@ -51,16 +51,16 @@ class CompositionRoot:
         )
 
         # user use cases
+        jwt_service = PyJWTService(secret_key="your_secret_key_here", expires_in=3600)
         register_user_use_case = RegisterUserUseCase(
             user_repository=self.user_repository,
             password_hasher=self.password_hasher,
+            jwt_service=jwt_service,
         )
         login_user_use_case = LoginUserUseCase(
             user_repository=self.user_repository,
             password_hasher=self.password_hasher,
-            jwt_service=PyJWTService(
-                secret_key="your_secret_key_here", expires_in=3600
-            ),
+            jwt_service=jwt_service,
         )
 
         ## controllers

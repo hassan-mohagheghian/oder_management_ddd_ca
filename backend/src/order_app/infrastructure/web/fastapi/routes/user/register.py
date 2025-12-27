@@ -1,12 +1,12 @@
+from os import access
 from uuid import UUID
 
 from fastapi import Depends, HTTPException
-from pydantic import BaseModel, EmailStr
-from starlette import status
-
 from order_app.infrastructure.composition_root import CompositionRoot
 from order_app.infrastructure.web.fastapi.dependencies import get_composition_root
 from order_app.interface.controllers.user.register_user import RegisterUserInputDto
+from pydantic import BaseModel, EmailStr
+from starlette import status
 
 
 class RegisterUserRequest(BaseModel):
@@ -17,6 +17,7 @@ class RegisterUserRequest(BaseModel):
 
 class RegisterUserResponse(BaseModel):
     user_id: UUID
+    access_token: str
 
 
 def register_user(
@@ -29,7 +30,10 @@ def register_user(
         )
     )
     if operation_result.is_success:
-        return RegisterUserResponse(user_id=operation_result.success.id)
+        return RegisterUserResponse(
+            user_id=operation_result.success.user.id,
+            access_token=operation_result.success.tokens.access_token,
+        )
     else:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,

@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-
+from fastapi.middleware.cors import CORSMiddleware
 from order_app.infrastructure.persistence.sqlite.init_db import init_db
 from order_app.infrastructure.web.fastapi.routes.user import router as user_router
 
@@ -7,6 +7,13 @@ from order_app.infrastructure.web.fastapi.routes.user import router as user_rout
 def create_web_app(testing: bool = False):
     app = FastAPI(title="Order Management App", version="0.1.0")
 
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
     if testing:
         app.testing = True
     else:

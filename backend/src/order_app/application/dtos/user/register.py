@@ -13,7 +13,7 @@ class RegisterUserRequestDto:
 
 
 @dataclass
-class UserResponse:
+class UserResponseDto:
     id: UUID
     name: str
     email: str
@@ -21,9 +21,21 @@ class UserResponse:
 
     @classmethod
     def from_entity(cls, user: User) -> Self:
-        return UserResponse(
+        return UserResponseDto(
             id=user.id,
             name=user.name,
             email=user.email,
             role=user.role.value,
         )
+
+
+@dataclass
+class TokensResponseDto:
+    access_token: str
+    # refresh_token: str
+
+
+@dataclass
+class RegisterUserResponseDto:
+    user: UserResponseDto
+    tokens: TokensResponseDto

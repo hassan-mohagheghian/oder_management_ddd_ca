@@ -106,11 +106,11 @@ class Result(Generic[T]):
         return self._error
 
     @classmethod
-    def success(cls, value: T) -> Result[T]:
+    def success(cls, value: T) -> Self[T]:
         """Create a successful result with the given value."""
         return cls(_value=value)
 
     @classmethod
-    def failure(cls, error: Error) -> Result[T]:
+    def failure(cls, error: Error) -> Self[T]:
         """Create a failed result with the given error."""
         return cls(_error=error)

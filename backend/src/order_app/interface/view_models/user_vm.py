@@ -11,7 +11,15 @@ class UserViewModel:
 
 
 @dataclass
-class RegisterUserViewModel(UserViewModel): ...
+class TokensViewModel:
+    access_token: str
+    # refresh_token: str
+
+
+@dataclass
+class RegisterUserViewModel:
+    user: UserViewModel
+    tokens: TokensViewModel
 
 
 @dataclass

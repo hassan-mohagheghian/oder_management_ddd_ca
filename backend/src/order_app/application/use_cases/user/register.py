@@ -3,8 +3,11 @@ from dataclasses import dataclass
 from order_app.application.common.result import Error, Result
 from order_app.application.dtos.user.register import (
     RegisterUserRequestDto,
-    UserResponse,
+    RegisterUserResponseDto,
+    TokensResponseDto,
+    UserResponseDto,
 )
+from order_app.application.ports.jwt_service import JwtService
 from order_app.application.ports.password_hasher import PasswordHasher
 from order_app.application.repositories.user_repository import UserRepository
 from order_app.domain.entities.user import User
@@ -15,8 +18,11 @@ from order_app.domain.exceptions import UserNotFoundError
 class RegisterUserUseCase:
     user_repository: UserRepository
     password_hasher: PasswordHasher
+    jwt_service: JwtService
 
-    def execute(self, request: RegisterUserRequestDto) -> Result[User]:
+    def execute(
+        self, request: RegisterUserRequestDto
+    ) -> Result[RegisterUserResponseDto]:
         try:
             self.user_repository.get_by_email(request.email)
         except UserNotFoundError:
@@ -28,7 +34,18 @@ class RegisterUserUseCase:
             )
 
             self.user_repository.create(user)
-            return Result.success(UserResponse.from_entity(user))
+            token = self.jwt_service.generate_token(
+                payload={"sub": str(user.id), "role": user.role.name}
+            )
+            return Result.success(
+                RegisterUserResponseDto(
+                    user=UserResponseDto.from_entity(user),
+                    tokens=TokensResponseDto(
+                        access_token=token,
+                    ),
+                )
+            )
+
         else:
             return Result.failure(
                 Error.already_exists(
